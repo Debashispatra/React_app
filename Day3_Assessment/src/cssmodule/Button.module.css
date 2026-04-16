@@ -1,0 +1,10 @@
+.button{
+    size: 100px;
+    height: 100px;
+    border-radius: 10px;
+    color: rgb(235, 232, 232);
+    background-color: black;
+}
+.p{
+    font-size: large;
+}
