@@ -1,0 +1,19 @@
+/* Active child + normal active links */
+.active-link {
+  background-color: #8b0304;
+  color: #fff !important;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* 🔥 Parent highlight when child active */
+.parent-active {
+  color: #8b0304 !important;
+  font-weight: 600;
+}
+
+/* Hover effect */
+.nav-link:hover {
+  background-color: rgba(139, 3, 4, 0.1);
+  border-radius: 6px;
+}

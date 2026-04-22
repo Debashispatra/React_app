@@ -1,0 +1,96 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* LEFT */
+.left-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-color: #f8f9fa; /* Light background to make watermark visible */
+}
+
+.logo-img {
+  width: 100%;
+  width: 26rem;
+  /* height: auto; */
+
+}
+
+.image-box {
+  margin-top: -20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.image-box img {
+  max-width: 80%;
+  height: auto;
+  opacity: 10; /* Slightly increased opacity to ensure it's visible */
+}
+
+/* RIGHT */
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 2rem;
+  margin-left: 100px;
+}
+
+.right-section h3 {
+  font-size: 35px;
+  margin: 0px;
+}
+
+.right-section input {
+  width: 80%;
+  padding: 12px;
+  margin-top: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.right-section input.error {
+  border: 1px solid red;
+}
+
+.right-section span {
+  color: red;
+  font-size: 12px;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+button {
+    width: 100%;;
+  margin-top: 20px;
+  padding: 14px 25px;
+  background: #8b0000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 600;
+}
