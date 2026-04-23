@@ -35,22 +35,26 @@ export default function Login() {
       const res = await loginUser(form);
 
       if (res) {
-        // 🔹 Store data
         localStorage.setItem("access_token", res.access_token);
         localStorage.setItem("user", JSON.stringify(res));
 
-        // Success toast
         setToast({
           show: true,
           message: "User Login Successful!!",
           type: "success",
         });
 
-        // 🔹 Redirect
         setTimeout(() => {
-          navigate("/dashboard");
+          if (res.roleName === "ROLE_ADMIN") {
+            navigate("/dashboard");
+          } else if (res.roleName === "ROLE_OPS_CHECKER" || "ROLE_OPS_MAKER") {
+            navigate("/dashboard");
+          } else {
+            navigate("/dashboard");
+          }
         }, 1500);
-      } else {
+      }
+      else {
         // Error toast
         setToast({
           show: true,
@@ -92,7 +96,7 @@ export default function Login() {
               alt="bg"
               style={{ width: "40%", opacity: 10 }}
             />
-{/* //                     <div className="mt-4 d-flex justify-content-center align-items-center bg-secondary bg-opacity-10 rounded" style={{ height: "350px" }}>
+            {/* //                     <div className="mt-4 d-flex justify-content-center align-items-center bg-secondary bg-opacity-10 rounded" style={{ height: "350px" }}>
 //                         <img src={watermark} alt="bg" style={{ width: "40%", opacity: 10 }} />
 //                     </div> */}
           </div>

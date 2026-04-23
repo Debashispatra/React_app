@@ -6,6 +6,7 @@ import {
     FaAngleLeft,
     FaAngleRight,
     FaLayerGroup,
+    FaUserPlus,
     FaUsers,
     FaUserCheck,
     FaClipboardList,
@@ -14,6 +15,8 @@ import {
 
 export default function Sidebar() {
     const location = useLocation();
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = user?.roleName;
 
     const isUserActive = location.pathname.includes("/users");
 
@@ -48,13 +51,12 @@ export default function Sidebar() {
 
             <ul className="nav flex-column mt-3">
 
-                {/* 🔥 Dashboard with RIGHT EDGE Toggle */}
+                {/* Dashboard with RIGHT EDGE Toggle */}
                 <li className="nav-item mb-2 position-relative">
                     <NavLink
                         to="/dashboard"
                         className={({ isActive }) =>
-                            `nav-link d-flex align-items-center ${
-                                isActive ? "fw-bold text-white rounded" : "text-black"
+                            `nav-link d-flex align-items-center ${isActive ? "fw-bold text-white rounded" : "text-black"
                             }`
                         }
                         style={({ isActive }) => ({
@@ -84,83 +86,125 @@ export default function Sidebar() {
                 </li>
 
                 {/* User Management */}
-                <li className="nav-item mb-2">
-                    <div
-                        className="nav-link d-flex align-items-center"
-                        style={{
-                            cursor: "pointer",
-                            color: isUserActive ? "#8b0304" : "black",
-                            fontWeight: isUserActive ? "600" : "normal",
-                            justifyContent: collapsed ? "center" : "flex-start",
-                        }}
-                        onClick={() => !collapsed && setOpenUserMenu(!openUserMenu)}
-                    >
-                        <FaUsers />
-                        {!collapsed && <span className="ms-2">User Management</span>}
-                    </div>
+                {["ROLE_OPS_CHECKER", "ROLE_OPS_MAKER"].includes(role) && (
+                    <li className="nav-item mb-2">
+                        <div
+                            className="nav-link d-flex align-items-center"
+                            style={{
+                                cursor: "pointer",
+                                color: isUserActive ? "#8b0304" : "black",
+                                fontWeight: isUserActive ? "600" : "normal",
+                                justifyContent: collapsed ? "center" : "flex-start",
+                            }}
+                            onClick={() => !collapsed && setOpenUserMenu(!openUserMenu)}
+                        >
+                            <FaUsers />
+                            {!collapsed && <span className="ms-2">User Management</span>}
+                        </div>
 
-                    {!collapsed && openUserMenu && (
-                        <ul className="nav flex-column ms-3">
-                            <li className="nav-item mb-1">
-                                <NavLink
-                                    to="/users"
-                                    className={({ isActive }) =>
-                                        `nav-link d-flex align-items-center ${
-                                            isActive ? "fw-bold text-white rounded" : "text-black"
-                                        }`
-                                    }
-                                    style={({ isActive }) => ({
-                                        backgroundColor: isActive ? "#8b0304" : "transparent",
-                                        padding: "10px",
-                                        marginTop: "10px",
-                                    })}
-                                >
-                                    <FaUserCheck className="me-2" />
-                                    User Request
-                                </NavLink>
-                            </li>
-                        </ul>
-                    )}
-                </li>
+                        {!collapsed && openUserMenu && (
+                            <ul className="nav flex-column ms-3">
+                                <li className="nav-item mb-1">
+                                    {["ROLE_OPS_MAKER"].includes(role) && (
+                                        <NavLink
+                                            to="/create-cbc-user"
+                                            className={({ isActive }) =>
+                                                `nav-link d-flex align-items-center ${isActive ? "fw-bold text-white rounded" : "text-black"
+                                                }`
+                                            }
+                                            style={({ isActive }) => ({
+                                                backgroundColor: isActive ? "#8b0304" : "transparent",
+                                                padding: "10px",
+                                                marginTop: "10px",
+                                            })}
+                                        >
+                                            <FaUserPlus className="me-2" />
+                                            Create CBC User
+                                        </NavLink>
+                                    )}
+                                </li>
+                                <li className="nav-item mb-1">
+                                    {["ROLE_OPS_MAKER"].includes(role) && (
+                                        <NavLink
+                                            to="/cbc-request"
+                                            className={({ isActive }) =>
+                                                `nav-link d-flex align-items-center ${isActive ? "fw-bold text-white rounded" : "text-black"
+                                                }`
+                                            }
+                                            style={({ isActive }) => ({
+                                                backgroundColor: isActive ? "#8b0304" : "transparent",
+                                                padding: "10px",
+                                                marginTop: "10px",
+                                            })}
+                                        >
+                                            <FaUserCheck className="me-2" />
+                                            User Request
+                                        </NavLink>
+                                    )}
+                                </li>
+                                <li className="nav-item mb-1">
+                                    {["ROLE_OPS_CHECKER"].includes(role) && (
+                                        <NavLink
+                                            to="/users"
+                                            className={({ isActive }) =>
+                                                `nav-link d-flex align-items-center ${isActive ? "fw-bold text-white rounded" : "text-black"
+                                                }`
+                                            }
+                                            style={({ isActive }) => ({
+                                                backgroundColor: isActive ? "#8b0304" : "transparent",
+                                                padding: "10px",
+                                                marginTop: "10px",
+                                            })}
+                                        >
+                                            <FaUserCheck className="me-2" />
+                                            User Request
+                                        </NavLink>
+                                    )}
+                                </li>
+                            </ul>
+                        )}
+                    </li>
+                )}
 
                 {/* Audit Trial */}
-                <li className="nav-item mb-2">
-                    <NavLink
-                        to="/AuditTrial"
-                        className={({ isActive }) =>
-                            `nav-link d-flex align-items-center ${
-                                isActive ? "fw-bold text-white rounded" : "text-black"
-                            }`
-                        }
-                        style={({ isActive }) => ({
-                            backgroundColor: isActive ? "#8b0304" : "transparent",
-                            justifyContent: collapsed ? "center" : "flex-start",
-                        })}
-                    >
-                        <FaClipboardList />
-                        {!collapsed && <span className="ms-2">Audit Trial</span>}
-                    </NavLink>
-                </li>
+                {["ROLE_OPS_CHECKER", "ROLE_OPS_MAKER"].includes(role) && (
+                    <li className="nav-item mb-2">
+                        <NavLink
+                            to="/AuditTrial"
+                            className={({ isActive }) =>
+                                `nav-link d-flex align-items-center ${isActive ? "fw-bold text-white rounded" : "text-black"
+                                }`
+                            }
+                            style={({ isActive }) => ({
+                                backgroundColor: isActive ? "#8b0304" : "transparent",
+                                justifyContent: collapsed ? "center" : "flex-start",
+                            })}
+                        >
+                            <FaClipboardList />
+                            {!collapsed && <span className="ms-2">Audit Trial</span>}
+                        </NavLink>
+                    </li>
+                )}
 
                 {/* Wallet Adjustment */}
-                <li className="nav-item mb-2">
-                    <NavLink
-                        to="/WalletAdjustment"
-                        className={({ isActive }) =>
-                            `nav-link d-flex align-items-center ${
-                                isActive ? "fw-bold text-white rounded" : "text-black"
-                            }`
-                        }
-                        style={({ isActive }) => ({
-                            backgroundColor: isActive ? "#8b0304" : "transparent",
-                            justifyContent: collapsed ? "center" : "flex-start",
-                        })}
-                    >
-                        <FaWallet />
-                        {!collapsed && <span className="ms-2">Wallet Adjustment</span>}
-                    </NavLink>
-                </li>
-
+                {["ROLE_OPS_CHECKER", "ROLE_OPS_MAKER"].includes(role) && (
+                    <li className="nav-item mb-2">
+                        <NavLink
+                            to="/WalletAdjustment"
+                            className={({ isActive }) =>
+                                `nav-link d-flex align-items-center ${isActive ? "fw-bold text-white rounded" : "text-black"
+                                }`
+                            }
+                            style={({ isActive }) => ({
+                                backgroundColor: isActive ? "#8b0304" : "transparent",
+                                justifyContent: collapsed ? "center" : "flex-start",
+                            })}
+                        >
+                            <FaWallet />
+                            {!collapsed && <span className="ms-2">Wallet Adjustment</span>}
+                        </NavLink>
+                    </li>
+                )}
             </ul>
         </div>
     );

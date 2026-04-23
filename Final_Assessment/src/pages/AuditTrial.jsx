@@ -12,14 +12,13 @@ export default function AuditTrial() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    /* --- Styles to match Figma precisely --- */
     const floatingLabelBox = {
         position: 'relative',
         border: '1px solid #ced4da',
         borderRadius: '4px',
         padding: '6px 12px 2px 12px',
         backgroundColor: '#fff',
-        minHeight: '45px'
+        minHeight: '48px'
     };
 
     const floatingLabelText = {
@@ -42,9 +41,7 @@ export default function AuditTrial() {
     };
 
     return (
-        <MainLayout>
             <div className="container-fluid pt-3">
-                <h4 className="mb-4 fw-bold">Audit Trial Report</h4>
 
                 {/* --- Search Filters Section --- */}
                 <div className="row g-3 align-items-center mb-4">
@@ -72,21 +69,22 @@ export default function AuditTrial() {
                             />
                         </div>
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-3">
                         <div className="form-group">
                             <input 
                                 type="text" 
                                 name="username"
                                 placeholder="Username" 
                                 className="form-control shadow-none py-2" 
-                                style={{ borderRadius: '4px' }}
+                                style={{ borderRadius: '4px', minHeight: '48px' }}
                                 value={formData.username}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
-                    <div className="col-md-1">
-                        <button className="btn text-white fw-bold px-4 py-2" style={{ backgroundColor: '#821317', borderRadius: '8px' }}>
+                    <div className="col-md-2">
+                        {/* Large Submit Button */}
+                        <button className="btn text-white fw-bold w-100 py-2 fs-5" style={{ backgroundColor: '#821317', borderRadius: '10px', minHeight: '48px' }}>
                             Submit
                         </button>
                     </div>
@@ -103,33 +101,42 @@ export default function AuditTrial() {
                             style={{ borderRadius: '4px' }}
                         />
                     </div>
-                    <button className="btn btn-dark d-flex align-items-center gap-2" style={{ backgroundColor: '#4a5568', border: 'none' }}>
-                        <i className="bi bi-download"></i> Download Sample File
-                    </button>
                 </div>
 
                 {/* --- Table Section --- */}
-                <div className="card shadow-sm border-0 rounded-0">
+                <div className="card shadow-sm border-0 rounded-0 overflow-hidden">
                     <div className="table-responsive">
                         <table className="table table-hover align-middle mb-0">
                             <thead>
                                 <tr style={tableHeaderStyle}>
-                                    <th className="py-3 text-center border-0" style={{ width: '80px' }}>Sno</th>
-                                    <th className="py-3 border-0">Field Name</th>
-                                    <th className="py-3 border-0">User Name</th>
-                                    <th className="py-3 border-0">User ID</th>
-                                    <th className="py-3 border-0">Admin Name</th>
+                                    <th className="py-3 text-center border-0">Sr. No.</th>
+                                    <th className="py-3 border-0 text-center">Name</th>
+                                    <th className="py-3 border-0 text-center">Username</th>
+                                    <th className="py-3 border-0 text-center">Bank Code</th>
+                                    <th className="py-3 border-0 text-center">Status</th>
+                                    <th className="py-3 border-0 text-center">Approved level</th>
                                     <th className="py-3 text-center border-0">Details</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {[1, 2, 3, 4, 5, 6].map((idx) => (
-                                    <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
-                                        <td className="text-center text-muted">{idx}</td>
-                                        <td className="text-muted">kitchen</td>
-                                        <td className="text-muted">Maker</td>
-                                        <td className="text-dark fw-bold">rYd306</td>
-                                        <td className="text-muted">Jonathan Velasquez</td>
+                                {[
+                                    { id: 1, name: 'Sandip Shantaram Pawaskar', user: 'DSUP000009', bank: 'NSDL', status: 'APPROVED', level: 'APPROVED BY OPS_CHECKER' },
+                                    { id: 2, name: 'MANAS KUMAR JENA', user: 'DSUP000008', bank: 'NSDL', status: 'APPROVED', level: 'APPROVED BY OPS_CHECKER' },
+                                    { id: 3, name: 'orange apple', user: 'CBC0000095', bank: 'NSDL', status: 'PENDING', level: 'PENDING AT OPS CH' },
+                                    { id: 4, name: 'kiwi mango', user: 'CBC0000094', bank: 'NSDL', status: 'PENDING', level: 'PENDING AT OPS CH' },
+                                ].map((row, idx) => (
+                                    <tr key={idx} style={{ borderBottom: '1px solid #eee', backgroundColor: idx % 2 !== 0 ? '#fff9f9' : 'white' }}>
+                                        <td className="text-center text-muted small">{row.id}</td>
+                                        <td className="text-center text-muted small" style={{ maxWidth: '150px' }}>{row.name}</td>
+                                        <td className="text-center text-muted small">{row.user}</td>
+                                        <td className="text-center text-muted small">{row.bank}</td>
+                                        <td className="text-center">
+                                            <span className={`badge rounded-pill px-3 py-1 ${row.status === 'APPROVED' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`} 
+                                                  style={{ fontSize: '11px', border: '1px solid currentColor', fontWeight: 'bold' }}>
+                                                ● {row.status}
+                                            </span>
+                                        </td>
+                                        <td className="text-center text-muted small">{row.level}</td>
                                         <td className="text-center">
                                             <button className="btn btn-link text-dark p-0 shadow-none">
                                                 <i className="bi bi-three-dots-vertical"></i>
@@ -141,15 +148,14 @@ export default function AuditTrial() {
                         </table>
                     </div>
                     {/* Pagination Footer */}
-                    <div className="d-flex justify-content-between align-items-center p-3 border-top">
-                        <div className="d-flex align-items-center gap-2">
+                    <div className="d-flex justify-content-between align-items-center p-2 border-top bg-white">
+                        <div className="d-flex align-items-center gap-2 ms-2">
                             <span className="small text-muted">Items per page:</span>
-                            <select className="form-select form-select-sm border-0 bg-light shadow-none" style={{ width: '60px' }}>
+                            <select className="form-select form-select-sm border-0 bg-light shadow-none" style={{ width: '65px' }}>
                                 <option>5</option>
-                                <option>10</option>
                             </select>
                         </div>
-                        <div className="d-flex align-items-center gap-4 small text-muted">
+                        <div className="d-flex align-items-center gap-4 small text-muted me-2">
                             <span>1 - 5 of 18</span>
                             <div className="d-flex gap-3">
                                 <i className="bi bi-chevron-double-left cursor-pointer"></i>
@@ -161,6 +167,5 @@ export default function AuditTrial() {
                     </div>
                 </div>
             </div>
-        </MainLayout>
     );
 }

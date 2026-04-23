@@ -28,6 +28,12 @@ export default function Navbar() {
 
         if (path === "/dashboard") return "Dashboard";
 
+        if (path.includes("create-cbc-user"))
+            return "User Management /  Create CBC User";
+
+        if (path.includes("/cbc-request"))
+            return "User Management /  User Request";
+
         if (path.includes("users"))
             return "User Management /  User Request";
 

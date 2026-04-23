@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import { encryptRequest, decryptResponse } from "../utils/encryption";
 
-export default function Users() {
+export default function CbcRequest() {
     return (
             <div className="container-fluid pt-3">
                 <UserRequestForm />
@@ -43,7 +43,7 @@ const UserRequestForm = () => {
         searchType: 'date',
         fromDate: getTodayDate(),
         toDate: getTodayDate(),
-        userType: 'ALL',
+        userType: 'CBC',
         status: 'ALL',
         userNameSearch: '' 
     });
@@ -120,7 +120,6 @@ const UserRequestForm = () => {
             let finalData = [];
 
             if (formData.searchType === 'date') {
-                // ENCRYPTED API CALL
                 const payload = {
                     startDate: formData.fromDate,
                     endDate: formData.toDate,
@@ -129,62 +128,44 @@ const UserRequestForm = () => {
                     username: user?.userType
                 };
                 console.log("payload", payload);
-                
-                const encryptedBody = { RequestData: encryptRequest(payload) };
 
                 const response = await fetch(
-                    "https://apidev-sdk.iserveu.online/NSDL/user_onboarding_report/fetch-user-list",
+                    "https://apidev.iserveu.online/NSDL/user_onboarding/fetch-user-list",
                     {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `${token}`,
-                            pass_key: "QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA"
                         },
-                        body: JSON.stringify(encryptedBody)
+                        body: JSON.stringify(payload)
                     }
                 );
                 const result = await response.json();
-                const decrypted = decryptResponse(result.ResponseData);
-                finalData = decrypted?.resultObj?.result || [];
+                console.log("result", result);
+                finalData = result?.resultObj?.result || [];
 
             } else {
-                // PLAIN JSON API CALL (Search by Username)
-                // const payload = {
-                //     searchUsername: formData.userNameSearch,
-                //     role: mapUsernameToRole(formData.userNameSearch)
-                // };
-                // console.log("payload", payload);
-
                 const payload = {
-                    // startDate: getTodayDate(),
-                    // endDate: getTodayDate(),
                     role: mapUsernameToRole(formData.userNameSearch),
-                    // status: "ALL",
                     searchUsername: formData.userNameSearch,
-                      //user?.userType
                 };
                 console.log("payload", payload);
-                
-                const encryptedBody = { RequestData: encryptRequest(payload) };
 
                 const response = await fetch(
-                    "https://apidev-sdk.iserveu.online/NSDL/user_onboarding_report/fetch-user-list",
+                    "https://apidev.iserveu.online/NSDL/user_onboarding/fetch-user-list",
                     {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `${token}`,
-                            pass_key: "QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA"
                         },
-                        body: JSON.stringify(encryptedBody)
+                        body: JSON.stringify(payload)
                     }
                 );
                 const result = await response.json();
-                const decrypted = decryptResponse(result.ResponseData);
-                finalData = decrypted?.resultObj?.result || [];
+                console.log("result", result);
+                finalData = result?.resultObj?.result || [];
             }
-            
             setTableData(finalData);
             setHasSearched(true);
         } catch (error) {
@@ -231,12 +212,7 @@ const UserRequestForm = () => {
                                     <div style={floatingLabelBox}>
                                         <label style={floatingLabelText}>USER TYPE</label>
                                         <select name="userType" className="form-select border-0 shadow-none p-0 mt-1 small bg-transparent" value={formData.userType} onChange={handleChange}>
-                                            <option value="ALL">ALL</option>
                                             <option value="CBC">CBC</option>
-                                            <option value="CBC Maker">CBC Maker</option>
-                                            <option value="Master Distributor">Master Distributor</option>
-                                            <option value="Distributor">Distributor</option>
-                                            <option value="Agent">Agent</option>
                                         </select>
                                     </div>
                                 </div>
