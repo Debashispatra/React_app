@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     FaUserCircle,
     FaBell,
@@ -11,11 +11,27 @@ import { useLocation } from "react-router-dom";
 
 export default function Navbar() {
     const user = JSON.parse(localStorage.getItem("user"));
-
+    const dropdownRef = useRef(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        if (showDropdown) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showDropdown]);
 
     const handleLogout = () => {
         localStorage.clear();
@@ -50,92 +66,82 @@ export default function Navbar() {
         <>
             {/* NAVBAR */}
             <div
-                className="d-flex justify-content-between align-items-center px-4"
+                className="d-flex justify-content-between align-items-center px-4 shadow-sm"
                 style={{
-                    height: "60px",
-                    backgroundColor: "#8b0304",
+                    height: "64px",
+                    backgroundColor: "#821317", // Primary red from ss
                     color: "#fff",
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 1020
                 }}
             >
-                <p className="mb-0 fw-semibold">{getPageTitle()}</p>
-                <div className="d-flex align-items-center gap-4 position-relative">
+                <p className="mb-0 fw-bold fs-5">{getPageTitle()}</p>
+                <div className="d-flex align-items-center gap-4 position-relative" ref={dropdownRef}>
 
-                    {/* Notification */}
-                    <FaBell size={20} style={{ cursor: "pointer" }} />
+                    {/* Notification Icon */}
+                    <div className="position-relative" style={{ cursor: "pointer" }}>
+                        <FaBell size={20} />
+                        <span className="position-absolute top-0 start-100 translate-middle">
+                            <span className="visually-hidden">New alerts</span>
+                        </span>
+                    </div>
 
-                    {/* Profile */}
+                    {/* Profile Section */}
                     <div
                         className="d-flex align-items-center gap-2"
                         style={{ cursor: "pointer" }}
                         onClick={() => setShowDropdown(!showDropdown)}
                     >
-                        <FaUserCircle size={22} />
-                        <span className="fw-semibold">{user?.userType}</span>
-
-                        <div
-                            className="d-flex align-items-center justify-content-center"
-                            style={{
-                                width: "28px",
-                                height: "28px",
-                                background: "white",
-                                borderRadius: "50%",
-                                color: "#8b0304",
-                            }}
-                        >
-                            <FaChevronDown size={12} />
-                        </div>
+                        <FaUserCircle size={24} />
+                        <span className="fw-semibold small">{user?.userType || "qa_ops_c"}</span>
+                        <FaChevronDown size={12} className={`transition-all ${showDropdown ? 'rotate-180' : ''}`} />
                     </div>
 
-                    {/* DROPDOWN */}
+                    {/* DROPDOWN MENU */}
                     {showDropdown && (
                         <div
-                            className="bg-white text-dark shadow rounded"
+                            className="bg-white text-dark shadow-lg rounded border"
                             style={{
                                 position: "absolute",
-                                top: "55px",
+                                top: "50px",
                                 right: 0,
-                                minWidth: "220px",
-                                zIndex: 1000,
+                                minWidth: "200px",
+                                zIndex: 1050,
+                                animation: "fadeIn 0.2s ease-out"
                             }}
                         >
-                            {/* Profile */}
                             <div
-                                className="dropdown-item d-flex align-items-center gap-2 p-3"
-                                style={{ cursor: "pointer" }}
+                                className="dropdown-item d-flex align-items-center gap-3 p-3 border-bottom text-secondary"
+                                style={{ cursor: "pointer", transition: "background 0.2s" }}
                                 onClick={() => {
                                     setShowDropdown(false);
                                     setShowProfileModal(true);
                                 }}
                             >
-                                <FaUser /> Profile
+                                <FaUser size={14} /> <span className="small fw-medium">Profile</span>
                             </div>
 
-                            <hr className="m-0" />
-
-                            {/* Change Password */}
                             <div
-                                className="dropdown-item d-flex align-items-center gap-2 p-3"
-                                style={{ cursor: "pointer" }}
+                                className="dropdown-item d-flex align-items-center gap-3 p-3 border-bottom text-secondary"
+                                style={{ cursor: "pointer", transition: "background 0.2s" }}
                                 onClick={() => {
                                     setShowDropdown(false);
                                     setShowPasswordModal(true);
                                 }}
                             >
-                                <FaKey /> Change Password
+                                <FaKey size={14} /> <span className="small fw-medium">Change Password</span>
                             </div>
 
-                            <hr className="m-0" />
-
-                            {/* Logout */}
                             <div
-                                className="dropdown-item d-flex align-items-center gap-2 p-3"
-                                style={{ cursor: "pointer" }}
+                                className="dropdown-item d-flex align-items-center gap-3 p-3 text-secondary"
+                                style={{ cursor: "pointer", transition: "background 0.2s" }}
                                 onClick={() => {
                                     setShowDropdown(false);
                                     setShowLogoutModal(true);
                                 }}
                             >
-                                <FaSignOutAlt /> Logout
+                                <FaSignOutAlt size={14} /> <span className="small fw-medium">Logout</span>
                             </div>
                         </div>
                     )}

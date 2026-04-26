@@ -3,12 +3,13 @@ import logo from "../assets/bank.png";
 import watermark from "../assets/nsdl_watermark.png";
 import { loginUser } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   // Toast state
   const [toast, setToast] = useState({
     show: false,
@@ -128,17 +129,37 @@ export default function Login() {
 
             {/* Password */}
             <div className="mb-3">
-              <input
-                type="password"
-                className={`form-control ${error.password ? "is-invalid" : ""}`}
-                placeholder="Password*"
-                value={form.password}
-                onChange={(e) =>
-                  setForm({ ...form, password: e.target.value })
-                }
-              />
+              <div className="input-group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`form-control ${error.password ? "is-invalid" : ""}`}
+                  placeholder="Password*"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  style={{ backgroundColor: "#f0f5ff", border: "none" }}
+                />
+
+                <span
+                  className="input-group-text"
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "#f0f5ff",
+                    border: "none",
+                  }}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <FaEye className="text-muted" />
+                  ) : (
+                    <FaEyeSlash className="text-muted" />
+                  )}
+                </span>
+              </div>
+
               {error.password && (
-                <div className="invalid-feedback">{error.password}</div>
+                <div className="invalid-feedback d-block">
+                  {error.password}
+                </div>
               )}
             </div>
 
